@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Agency Virtual Space</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            font-family: Arial, sans-serif;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            z-index: 100;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+        }
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>AGENCY 3D VIRTUAL SPACE</h1>
+        <p>Welcome to your interactive agency space</p>
+    </div>
+
+    <div id="instructions">
+        <strong>Controls:</strong><br>
+        • Click + Drag = Look around<br>
+        • Scroll = Zoom in/out<br>
+        • Click objects = Interact
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x1a1a2e);
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 10, 5);
+        scene.add(directionalLight);
+
+        // Floor
+        const floorGeometry = new THREE.PlaneGeometry(20, 20);
+        const floorMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x2c2c54,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        floor.rotation.x = -Math.PI / 2;
+        scene.add(floor);
+
+        // Walls
+        const wallGeometry = new THREE.BoxGeometry(20, 8, 0.2);
+        const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x16213e });
+        
+        const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
+        backWall.position.z = -10;
+        backWall.position.y = 4;
+        scene.add(backWall);
+
+        // Agency Desk
+        const deskGeometry = new THREE.BoxGeometry(4, 0.5, 2);
+        const deskMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const desk = new THREE.Mesh(deskGeometry, deskMaterial);
+        desk.position.set(-3, 0.25, -5);
+        scene.add(desk);
+
+        // Computer
+        const computerBaseGeometry = new THREE.BoxGeometry(1, 0.1, 0.8);
+        const computerBaseMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        const computerBase = new THREE.Mesh(computerBaseGeometry, computerBaseMaterial);
+        computerBase.position.set(-3, 0.8, -5);
+        scene.add(computerBase);
+
+        const computerScreenGeometry = new THREE.BoxGeometry(0.9, 0.6, 0.05);
+        const computerScreenMaterial = new THREE.MeshStandardMaterial({ color: 0x0abde3 });
+        const computerScreen = new THREE.Mesh(computerScreenGeometry, computerScreenMaterial);
+        computerScreen.position.set(-3, 1.1, -5.4);
+        scene.add(computerScreen);
+
+        // Bookshelf
+        const shelfGeometry = new THREE.BoxGeometry(3, 4, 0.5);
+        const shelfMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const bookshelf = new THREE.Mesh(shelfGeometry, shelfMaterial);
+        bookshelf.position.set(5, 2, -8);
+        scene.add(bookshelf);
+
+        // Plant
+        const potGeometry = new THREE.CylinderGeometry(0.3, 0.4, 0.4, 8);
+        const potMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const pot = new THREE.Mesh(potGeometry, potMaterial);
+        pot.position.set(-6, 0.2, -6);
+        scene.add(pot);
+
+        const plantGeometry = new THREE.SphereGeometry(0.6, 8, 6);
+        const plantMaterial = new THREE.MeshStandardMaterial({ color: 0x10ac84 });
+        const plant = new THREE.Mesh(plantGeometry, plantMaterial);
+        plant.position.set(-6, 0.8, -6);
+        scene.add(plant);
+
+        // Camera position
+        camera.position.set(0, 3, 8);
+        camera.lookAt(0, 2, 0);
+
+        // Mouse controls
+        let mouseX = 0, mouseY = 0;
+        let isMouseDown = false;
+
+        document.addEventListener('mousedown', () => isMouseDown = true);
+        document.addEventListener('mouseup', () => isMouseDown = false);
+        
+        document.addEventListener('mousemove', (event) => {
+            if (isMouseDown) {
+                camera.position.x -= event.movementX * 0.02;
+                camera.position.y -= event.movementY * 0.02;
+            }
+        });
+
+        // Zoom with scroll
+        document.addEventListener('wheel', (event) => {
+            camera.position.z += event.deltaY * 0.01;
+        });
+
+        // Click detection
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onMouseClick(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            const interactableObjects = [desk, computerBase, computerScreen, bookshelf, plant];
+            const intersects = raycaster.intersectObjects(interactableObjects);
+            
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                alert('You clicked on: ' + getObjectName(object));
+                
+                // Visual feedback
+                object.material.emissive = new THREE.Color(0x444444);
+                setTimeout(() => {
+                    object.material.emissive = new THREE.Color(0x000000);
+                }, 300);
+            }
+        }
+
+        function getObjectName(object) {
+            if (object === desk) return "Work Desk - Access client projects and tasks";
+            if (object === computerBase || object === computerScreen) return "Computer - Agency management system";
+            if (object === bookshelf) return "Bookshelf - Resources and case studies";
+            if (object === plant || object === pot) return "Plant - Creative inspiration";
+            return "Object";
+        }
+
+        document.addEventListener('click', onMouseClick);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
