@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Agency Office - 3D Virtual Space</title>
+    <title>Nexos Agency - 3D Virtual Space</title>
     <style>
         body { 
             margin: 0; 
@@ -36,8 +36,8 @@
 </head>
 <body>
     <div id="info">
-        <h1>MODERN AGENCY OFFICE</h1>
-        <p>Minimalist & Creative Space</p>
+        <h1>NEXOS AGENCY OFFICE</h1>
+        <p>Modern & Creative Space</p>
     </div>
 
     <div id="instructions">
@@ -103,93 +103,6 @@
             color: 0xffffff,
             roughness: 0.4
         });
-        // NEXOS AGENCY LOGO ON MAIN WALL
-const logoGeometry = new THREE.PlaneGeometry(3, 1);
-const logoMaterial = new THREE.MeshStandardMaterial({
-    color: 0x2c3e50, // Dark blue-gray
-    roughness: 0.3,
-    metalness: 0.7
-});
-const logo = new THREE.Mesh(logoGeometry, logoMaterial);
-logo.position.set(0, 6, -11.9); // Centered on back wall
-logo.rotation.y = Math.PI; // Face forward
-scene.add(logo);
-
-// Logo text (using 3D text)
-const loader = new THREE.FontLoader();
-// Using a simple geometric representation for the logo
-const createLogoText = () => {
-    const textGeometry = new THREE.PlaneGeometry(2.5, 0.6);
-    const textMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff, // White text
-        roughness: 0.2,
-        metalness: 0.8
-    });
-    const textBackground = new THREE.Mesh(textGeometry, textMaterial);
-    textBackground.position.set(0, 6, -11.85);
-    textBackground.rotation.y = Math.PI;
-    scene.add(textBackground);
-
-    // Create NEXOS text using basic shapes
-    const createLetter = (shape, color, x, y, z) => {
-        const geometry = new THREE.ShapeGeometry(shape);
-        const material = new THREE.MeshStandardMaterial({ color: color });
-        const letter = new THREE.Mesh(geometry, material);
-        letter.position.set(x, y, z);
-        letter.rotation.y = Math.PI;
-        letter.scale.set(0.015, 0.015, 0.015);
-        scene.add(letter);
-        return letter;
-    };
-
-    // Create minimalist NEXOS design using geometric shapes
-    // Letter N - two vertical bars with one diagonal
-    const nShape1 = new THREE.Shape();
-    nShape1.moveTo(0, 0);
-    nShape1.lineTo(10, 0);
-    nShape1.lineTo(10, 40);
-    nShape1.lineTo(0, 40);
-    nShape1.lineTo(0, 0);
-
-    const nShape2 = new THREE.Shape();
-    nShape2.moveTo(50, 0);
-    nShape2.lineTo(60, 0);
-    nShape2.lineTo(60, 40);
-    nShape2.lineTo(50, 40);
-    nShape2.lineTo(50, 0);
-
-    const nShape3 = new THREE.Shape();
-    nShape3.moveTo(10, 40);
-    nShape3.lineTo(50, 0);
-    nShape3.lineTo(60, 0);
-    nShape3.lineTo(20, 40);
-    nShape3.lineTo(10, 40);
-
-    const letterN1 = createLetter(nShape1, 0x2c3e50, -1.0, 6, -11.8);
-    const letterN2 = createLetter(nShape2, 0x2c3e50, -0.6, 6, -11.8);
-    const letterN3 = createLetter(nShape3, 0x2c3e50, -0.8, 6, -11.8);
-
-    // Simple geometric dot as logo symbol
-    const dotGeometry = new THREE.CircleGeometry(0.15, 8);
-    const dotMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0xFF6B35, // Orange accent
-        roughness: 0.2,
-        metalness: 0.8
-    });
-    const logoDot = new THREE.Mesh(dotGeometry, dotMaterial);
-    logoDot.position.set(0.8, 6, -11.8);
-    logoDot.rotation.y = Math.PI;
-    scene.add(logoDot);
-};
-
-createLogoText();
-
-// Add lighting specifically for the logo
-const logoLight = new THREE.SpotLight(0xffffff, 0.5);
-logoLight.position.set(0, 8, -8);
-logoLight.target.position.set(0, 6, -12);
-scene.add(logoLight);
-scene.add(logoLight.target);
         
         // Back wall
         const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -228,6 +141,119 @@ scene.add(logoLight.target);
         const windowGlass = new THREE.Mesh(windowGlassGeometry, windowGlassMaterial);
         windowGlass.position.set(12.5, 5, 2.1);
         scene.add(windowGlass);
+
+        // NEXOS AGENCY LOGO ON MAIN WALL
+        const logoGeometry = new THREE.PlaneGeometry(4, 1.2);
+        const logoMaterial = new THREE.MeshStandardMaterial({
+            color: 0x2c3e50, // Dark blue-gray
+            roughness: 0.3,
+            metalness: 0.7
+        });
+        const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+        logo.position.set(0, 7, -11.9); // Centered on back wall
+        logo.rotation.y = Math.PI; // Face forward
+        scene.add(logo);
+
+        // Create NEXOS text using geometric shapes
+        const createNexosLogo = () => {
+            // NEXOS text background
+            const textBackgroundGeometry = new THREE.PlaneGeometry(3.5, 0.8);
+            const textBackgroundMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff, // White background
+                roughness: 0.2,
+                metalness: 0.8
+            });
+            const textBackground = new THREE.Mesh(textBackgroundGeometry, textBackgroundMaterial);
+            textBackground.position.set(0, 7, -11.85);
+            textBackground.rotation.y = Math.PI;
+            scene.add(textBackground);
+
+            // Create geometric N shape
+            const createNShape = (x) => {
+                // Vertical left bar
+                const leftBarGeometry = new THREE.BoxGeometry(0.15, 0.6, 0.02);
+                const leftBarMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+                const leftBar = new THREE.Mesh(leftBarGeometry, leftBarMaterial);
+                leftBar.position.set(x - 0.5, 7, -11.8);
+                leftBar.rotation.y = Math.PI;
+                scene.add(leftBar);
+
+                // Vertical right bar
+                const rightBarGeometry = new THREE.BoxGeometry(0.15, 0.6, 0.02);
+                const rightBarMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+                const rightBar = new THREE.Mesh(rightBarGeometry, rightBarMaterial);
+                rightBar.position.set(x + 0.5, 7, -11.8);
+                rightBar.rotation.y = Math.PI;
+                scene.add(rightBar);
+
+                // Diagonal bar
+                const diagBarGeometry = new THREE.BoxGeometry(0.1, 0.85, 0.02);
+                const diagBarMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+                const diagBar = new THREE.Mesh(diagBarGeometry, diagBarMaterial);
+                diagBar.position.set(x, 7, -11.8);
+                diagBar.rotation.y = Math.PI;
+                diagBar.rotation.z = Math.PI / 4;
+                scene.add(diagBar);
+
+                return [leftBar, rightBar, diagBar];
+            };
+
+            // Create geometric shapes for E X O S
+            const createLetterE = (x) => {
+                const eGeometry = new THREE.BoxGeometry(0.6, 0.15, 0.02);
+                const eMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+                
+                const topBar = new THREE.Mesh(eGeometry, eMaterial);
+                topBar.position.set(x, 7.2, -11.8);
+                topBar.rotation.y = Math.PI;
+                scene.add(topBar);
+
+                const middleBar = new THREE.Mesh(eGeometry, eMaterial);
+                middleBar.position.set(x, 7, -11.8);
+                middleBar.rotation.y = Math.PI;
+                scene.add(middleBar);
+
+                const bottomBar = new THREE.Mesh(eGeometry, eMaterial);
+                bottomBar.position.set(x, 6.8, -11.8);
+                bottomBar.rotation.y = Math.PI;
+                scene.add(bottomBar);
+
+                const verticalBar = new THREE.BoxGeometry(0.15, 0.6, 0.02);
+                const vertical = new THREE.Mesh(verticalBar, eMaterial);
+                vertical.position.set(x - 0.25, 7, -11.8);
+                vertical.rotation.y = Math.PI;
+                scene.add(vertical);
+
+                return [topBar, middleBar, bottomBar, vertical];
+            };
+
+            // Create letters
+            const nLetters = createNShape(-1.5);
+            const eLetters = createLetterE(-0.5);
+            
+            // Orange accent dot
+            const dotGeometry = new THREE.SphereGeometry(0.08, 8, 6);
+            const dotMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xFF6B35, // Orange accent
+                roughness: 0.2,
+                metalness: 0.8
+            });
+            const logoDot = new THREE.Mesh(dotGeometry, dotMaterial);
+            logoDot.position.set(0.8, 7, -11.8);
+            logoDot.rotation.y = Math.PI;
+            scene.add(logoDot);
+
+            return [...nLetters, ...eLetters, logoDot];
+        };
+
+        const logoLetters = createNexosLogo();
+
+        // Add lighting specifically for the logo
+        const logoLight = new THREE.SpotLight(0xffffff, 0.5);
+        logoLight.position.set(0, 9, -8);
+        logoLight.target.position.set(0, 7, -12);
+        scene.add(logoLight);
+        scene.add(logoLight.target);
 
         // MODERN WOODEN DESK with black legs
         const deskTopGeometry = new THREE.BoxGeometry(6, 0.1, 2.5);
@@ -379,17 +405,9 @@ scene.add(logoLight.target);
             
             raycaster.setFromCamera(mouse, camera);
             
-            // Find this line in your existing code:
-const interactableObjects = [
-    deskTop, monitorScreen, chairSeat, sideboard, 
-    ...plant1, ...plant2, ...plant3
-];
-
-// ADD 'logo' to the array:
-const interactableObjects = [
-    deskTop, monitorScreen, chairSeat, sideboard, 
-    ...plant1, ...plant2, ...plant3, logo
-];
+            const interactableObjects = [
+                deskTop, monitorScreen, chairSeat, sideboard, logo,
+                ...plant1, ...plant2, ...plant3, ...logoLetters
             ];
             const intersects = raycaster.intersectObjects(interactableObjects);
             
@@ -407,15 +425,16 @@ const interactableObjects = [
         }
 
         function getObjectName(object) {
-    if (object === logo) return "Nexos Agency Logo - Your Creative Partner";
-    if (object === deskTop) return "Modern Work Desk - Your creative space";
-    if (object === monitorScreen) return "Computer - Agency management system";
-    if (object === chairSeat) return "Designer Chair - Client meetings";
-    if (object === sideboard) return "Storage Sideboard - Project archives";
-    if (plant1.includes(object) || plant2.includes(object) || plant3.includes(object)) 
-        return "Plant - Natural inspiration";
-    return "Office Element";
-}
+            if (object === logo || logoLetters.includes(object)) 
+                return "Nexos Agency - Your Creative Partner";
+            if (object === deskTop) return "Modern Work Desk - Your creative space";
+            if (object === monitorScreen) return "Computer - Agency management system";
+            if (object === chairSeat) return "Designer Chair - Client meetings";
+            if (object === sideboard) return "Storage Sideboard - Project archives";
+            if (plant1.includes(object) || plant2.includes(object) || plant3.includes(object)) 
+                return "Plant - Natural inspiration";
+            return "Office Element";
+        }
 
         document.addEventListener('click', onMouseClick);
 
