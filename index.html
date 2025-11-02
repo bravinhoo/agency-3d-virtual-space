@@ -3,40 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Agency Virtual Space</title>
+    <title>Modern Agency Office - 3D Virtual Space</title>
     <style>
         body { 
             margin: 0; 
             padding: 0; 
             overflow: hidden; 
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
         #info {
             position: absolute;
             top: 10px;
             width: 100%;
             text-align: center;
-            color: white;
+            color: #333;
             z-index: 100;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            background: rgba(0,0,0,0.5);
+            background: rgba(255, 255, 255, 0.9);
             padding: 10px;
+            font-weight: bold;
         }
         #instructions {
             position: absolute;
             bottom: 20px;
             left: 20px;
-            color: white;
-            background: rgba(0,0,0,0.7);
-            padding: 10px;
-            border-radius: 5px;
+            color: #333;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div id="info">
-        <h1>AGENCY 3D VIRTUAL SPACE</h1>
-        <p>Welcome to your interactive agency space</p>
+        <h1>MODERN AGENCY OFFICE</h1>
+        <p>Minimalist & Creative Space</p>
     </div>
 
     <div id="instructions">
@@ -51,88 +52,220 @@
         // Scene setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x1a1a2e);
+        renderer.setClearColor(0xf8f9fa); // Light background
         document.body.appendChild(renderer.domElement);
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404040);
+        // Enhanced Lighting - Natural light simulation
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambientLight);
         
+        // Main directional light (window light)
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(10, 10, 5);
+        directionalLight.position.set(15, 10, 10);
+        directionalLight.castShadow = true;
         scene.add(directionalLight);
 
-        // Floor
-        const floorGeometry = new THREE.PlaneGeometry(20, 20);
+        // Additional fill light
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+        fillLight.position.set(-5, 5, -5);
+        scene.add(fillLight);
+
+        // PARQUET FLOOR
+        const floorGeometry = new THREE.PlaneGeometry(25, 25);
         const floorMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x2c2c54,
+            color: 0xd4a574, // Light wood color
             roughness: 0.8,
-            metalness: 0.2
+            metalness: 0.1
         });
         const floor = new THREE.Mesh(floorGeometry, floorMaterial);
         floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
         scene.add(floor);
 
-        // Walls
-        const wallGeometry = new THREE.BoxGeometry(20, 8, 0.2);
-        const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x16213e });
+        // Add parquet pattern with grid
+        const parquetGeometry = new THREE.PlaneGeometry(25, 25, 10, 10);
+        const parquetMaterial = new THREE.MeshBasicMaterial({
+            color: 0x8b5a2b,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.1
+        });
+        const parquetGrid = new THREE.Mesh(parquetGeometry, parquetMaterial);
+        parquetGrid.rotation.x = -Math.PI / 2;
+        scene.add(parquetGrid);
+
+        // WALLS - Clean white
+        const wallGeometry = new THREE.BoxGeometry(25, 10, 0.2);
+        const wallMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0xffffff,
+            roughness: 0.4
+        });
         
+        // Back wall
         const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
-        backWall.position.z = -10;
-        backWall.position.y = 4;
+        backWall.position.z = -12.5;
+        backWall.position.y = 5;
         scene.add(backWall);
 
-        // Agency Desk
-        const deskGeometry = new THREE.BoxGeometry(4, 0.5, 2);
-        const deskMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-        const desk = new THREE.Mesh(deskGeometry, deskMaterial);
-        desk.position.set(-3, 0.25, -5);
-        scene.add(desk);
+        // Left wall
+        const leftWall = new THREE.Mesh(wallGeometry, wallMaterial);
+        leftWall.rotation.y = Math.PI / 2;
+        leftWall.position.x = -12.5;
+        leftWall.position.y = 5;
+        scene.add(leftWall);
 
-        // Computer
-        const computerBaseGeometry = new THREE.BoxGeometry(1, 0.1, 0.8);
-        const computerBaseMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
-        const computerBase = new THREE.Mesh(computerBaseGeometry, computerBaseMaterial);
-        computerBase.position.set(-3, 0.8, -5);
-        scene.add(computerBase);
+        // Right wall with WINDOW
+        const rightWall = new THREE.Mesh(wallGeometry, wallMaterial);
+        rightWall.rotation.y = Math.PI / 2;
+        rightWall.position.x = 12.5;
+        rightWall.position.y = 5;
+        scene.add(rightWall);
 
-        const computerScreenGeometry = new THREE.BoxGeometry(0.9, 0.6, 0.05);
-        const computerScreenMaterial = new THREE.MeshStandardMaterial({ color: 0x0abde3 });
-        const computerScreen = new THREE.Mesh(computerScreenGeometry, computerScreenMaterial);
-        computerScreen.position.set(-3, 1.1, -5.4);
-        scene.add(computerScreen);
+        // Window frame
+        const windowFrameGeometry = new THREE.BoxGeometry(8, 6, 0.3);
+        const windowFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+        const windowFrame = new THREE.Mesh(windowFrameGeometry, windowFrameMaterial);
+        windowFrame.position.set(12.5, 5, 2);
+        scene.add(windowFrame);
 
-        // Bookshelf
-        const shelfGeometry = new THREE.BoxGeometry(3, 4, 0.5);
-        const shelfMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-        const bookshelf = new THREE.Mesh(shelfGeometry, shelfMaterial);
-        bookshelf.position.set(5, 2, -8);
-        scene.add(bookshelf);
+        // Window glass with blue sky view
+        const windowGlassGeometry = new THREE.PlaneGeometry(7.5, 5.5);
+        const windowGlassMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x87CEEB,
+            transparent: true,
+            opacity: 0.7
+        });
+        const windowGlass = new THREE.Mesh(windowGlassGeometry, windowGlassMaterial);
+        windowGlass.position.set(12.5, 5, 2.1);
+        scene.add(windowGlass);
 
-        // Plant
-        const potGeometry = new THREE.CylinderGeometry(0.3, 0.4, 0.4, 8);
-        const potMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-        const pot = new THREE.Mesh(potGeometry, potMaterial);
-        pot.position.set(-6, 0.2, -6);
-        scene.add(pot);
+        // MODERN WOODEN DESK with black legs
+        const deskTopGeometry = new THREE.BoxGeometry(6, 0.1, 2.5);
+        const deskTopMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0xe8d0a9, // Light wood
+            roughness: 0.6
+        });
+        const deskTop = new THREE.Mesh(deskTopGeometry, deskTopMaterial);
+        deskTop.position.set(0, 0.75, -5);
+        deskTop.castShadow = true;
+        deskTop.receiveShadow = true;
+        scene.add(deskTop);
 
-        const plantGeometry = new THREE.SphereGeometry(0.6, 8, 6);
-        const plantMaterial = new THREE.MeshStandardMaterial({ color: 0x10ac84 });
-        const plant = new THREE.Mesh(plantGeometry, plantMaterial);
-        plant.position.set(-6, 0.8, -6);
-        scene.add(plant);
+        // Desk legs (black metal)
+        const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.7, 8);
+        const legMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+        
+        for (let i = 0; i < 4; i++) {
+            const leg = new THREE.Mesh(legGeometry, legMaterial);
+            const x = (i % 2 === 0 ? -2.8 : 2.8);
+            const z = (i < 2 ? -1.1 : 1.1);
+            leg.position.set(x, 0.35, z - 5);
+            leg.castShadow = true;
+            scene.add(leg);
+        }
+
+        // SLIM COMPUTER MONITOR
+        const monitorStandGeometry = new THREE.BoxGeometry(0.3, 0.4, 0.3);
+        const monitorStandMaterial = new THREE.MeshStandardMaterial({ color: 0x34495e });
+        const monitorStand = new THREE.Mesh(monitorStandGeometry, monitorStandMaterial);
+        monitorStand.position.set(0, 1.1, -5);
+        scene.add(monitorStand);
+
+        const monitorScreenGeometry = new THREE.BoxGeometry(1.6, 1, 0.05);
+        const monitorScreenMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
+        const monitorScreen = new THREE.Mesh(monitorScreenGeometry, monitorScreenMaterial);
+        monitorScreen.position.set(0, 1.8, -4.9);
+        scene.add(monitorScreen);
+
+        const monitorDisplayGeometry = new THREE.PlaneGeometry(1.5, 0.9);
+        const monitorDisplayMaterial = new THREE.MeshBasicMaterial({ color: 0x0abde3 });
+        const monitorDisplay = new THREE.Mesh(monitorDisplayGeometry, monitorDisplayMaterial);
+        monitorDisplay.position.set(0, 1.8, -4.85);
+        scene.add(monitorDisplay);
+
+        // ELEGANT OFFICE CHAIR
+        const chairSeatGeometry = new THREE.BoxGeometry(0.8, 0.1, 0.8);
+        const chairSeatMaterial = new THREE.MeshStandardMaterial({ color: 0x34495e });
+        const chairSeat = new THREE.Mesh(chairSeatGeometry, chairSeatMaterial);
+        chairSeat.position.set(2, 0.45, -5);
+        scene.add(chairSeat);
+
+        const chairBackGeometry = new THREE.BoxGeometry(0.8, 1, 0.05);
+        const chairBackMaterial = new THREE.MeshStandardMaterial({ color: 0x34495e });
+        const chairBack = new THREE.Mesh(chairBackGeometry, chairBackMaterial);
+        chairBack.position.set(2, 1, -5.4);
+        scene.add(chairBack);
+
+        const chairLegGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.4, 8);
+        const chairLegMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+        
+        for (let i = 0; i < 5; i++) {
+            const chairLeg = new THREE.Mesh(chairLegGeometry, chairLegMaterial);
+            const angle = (i / 5) * Math.PI * 2;
+            const radius = 0.3;
+            chairLeg.position.set(
+                2 + Math.cos(angle) * radius,
+                0.2,
+                -5 + Math.sin(angle) * radius
+            );
+            scene.add(chairLeg);
+        }
+
+        // WOODEN SIDEBOARD WITH DRAWERS
+        const sideboardGeometry = new THREE.BoxGeometry(3, 2.5, 0.8);
+        const sideboardMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0xd4a574, // Wood color
+            roughness: 0.7
+        });
+        const sideboard = new THREE.Mesh(sideboardGeometry, sideboardMaterial);
+        sideboard.position.set(-8, 1.25, -8);
+        sideboard.castShadow = true;
+        scene.add(sideboard);
+
+        // Drawer handles
+        const handleGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8);
+        const handleMaterial = new THREE.MeshStandardMaterial({ color: 0x2c3e50 });
+        
+        for (let i = 0; i < 3; i++) {
+            const handle = new THREE.Mesh(handleGeometry, handleMaterial);
+            handle.rotation.z = Math.PI / 2;
+            handle.position.set(-8, 0.8 + i * 0.7, -7.4);
+            scene.add(handle);
+        }
+
+        // POTTED PLANTS
+        function createPlant(x, z, size) {
+            // Plant pot
+            const potGeometry = new THREE.CylinderGeometry(0.3 * size, 0.4 * size, 0.4 * size, 8);
+            const potMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+            const pot = new THREE.Mesh(potGeometry, potMaterial);
+            pot.position.set(x, 0.2 * size, z);
+            scene.add(pot);
+
+            // Plant leaves
+            const plantGeometry = new THREE.SphereGeometry(0.6 * size, 8, 6);
+            const plantMaterial = new THREE.MeshStandardMaterial({ color: 0x2ecc71 });
+            const plant = new THREE.Mesh(plantGeometry, plantMaterial);
+            plant.position.set(x, 0.8 * size, z);
+            scene.add(plant);
+
+            return [pot, plant];
+        }
+
+        // Create multiple plants
+        const plant1 = createPlant(-5, 3, 0.8);
+        const plant2 = createPlant(8, -3, 1);
+        const plant3 = createPlant(10, 8, 0.6);
 
         // Camera position
-        camera.position.set(0, 3, 8);
+        camera.position.set(0, 3, 10);
         camera.lookAt(0, 2, 0);
 
         // Mouse controls
-        let mouseX = 0, mouseY = 0;
         let isMouseDown = false;
-
         document.addEventListener('mousedown', () => isMouseDown = true);
         document.addEventListener('mouseup', () => isMouseDown = false);
         
@@ -140,6 +273,7 @@
             if (isMouseDown) {
                 camera.position.x -= event.movementX * 0.02;
                 camera.position.y -= event.movementY * 0.02;
+                camera.lookAt(0, 2, 0);
             }
         });
 
@@ -158,15 +292,19 @@
             
             raycaster.setFromCamera(mouse, camera);
             
-            const interactableObjects = [desk, computerBase, computerScreen, bookshelf, plant];
+            const interactableObjects = [
+                deskTop, monitorScreen, chairSeat, sideboard, 
+                ...plant1, ...plant2, ...plant3
+            ];
             const intersects = raycaster.intersectObjects(interactableObjects);
             
             if (intersects.length > 0) {
                 const object = intersects[0].object;
-                alert('You clicked on: ' + getObjectName(object));
+                const objectName = getObjectName(object);
+                alert('You clicked on: ' + objectName);
                 
                 // Visual feedback
-                object.material.emissive = new THREE.Color(0x444444);
+                object.material.emissive = new THREE.Color(0x333333);
                 setTimeout(() => {
                     object.material.emissive = new THREE.Color(0x000000);
                 }, 300);
@@ -174,11 +312,13 @@
         }
 
         function getObjectName(object) {
-            if (object === desk) return "Work Desk - Access client projects and tasks";
-            if (object === computerBase || object === computerScreen) return "Computer - Agency management system";
-            if (object === bookshelf) return "Bookshelf - Resources and case studies";
-            if (object === plant || object === pot) return "Plant - Creative inspiration";
-            return "Object";
+            if (object === deskTop) return "Modern Work Desk - Your creative space";
+            if (object === monitorScreen) return "Computer - Agency management system";
+            if (object === chairSeat) return "Designer Chair - Client meetings";
+            if (object === sideboard) return "Storage Sideboard - Project archives";
+            if (plant1.includes(object) || plant2.includes(object) || plant3.includes(object)) 
+                return "Plant - Natural inspiration";
+            return "Office Element";
         }
 
         document.addEventListener('click', onMouseClick);
@@ -195,6 +335,10 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        // Enable shadows
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         animate();
     </script>
