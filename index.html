@@ -379,9 +379,17 @@ scene.add(logoLight.target);
             
             raycaster.setFromCamera(mouse, camera);
             
-            const interactableObjects = [
-                deskTop, monitorScreen, chairSeat, sideboard, 
-                ...plant1, ...plant2, ...plant3
+            // Find this line in your existing code:
+const interactableObjects = [
+    deskTop, monitorScreen, chairSeat, sideboard, 
+    ...plant1, ...plant2, ...plant3
+];
+
+// ADD 'logo' to the array:
+const interactableObjects = [
+    deskTop, monitorScreen, chairSeat, sideboard, 
+    ...plant1, ...plant2, ...plant3, logo
+];
             ];
             const intersects = raycaster.intersectObjects(interactableObjects);
             
@@ -399,14 +407,15 @@ scene.add(logoLight.target);
         }
 
         function getObjectName(object) {
-            if (object === deskTop) return "Modern Work Desk - Your creative space";
-            if (object === monitorScreen) return "Computer - Agency management system";
-            if (object === chairSeat) return "Designer Chair - Client meetings";
-            if (object === sideboard) return "Storage Sideboard - Project archives";
-            if (plant1.includes(object) || plant2.includes(object) || plant3.includes(object)) 
-                return "Plant - Natural inspiration";
-            return "Office Element";
-        }
+    if (object === logo) return "Nexos Agency Logo - Your Creative Partner";
+    if (object === deskTop) return "Modern Work Desk - Your creative space";
+    if (object === monitorScreen) return "Computer - Agency management system";
+    if (object === chairSeat) return "Designer Chair - Client meetings";
+    if (object === sideboard) return "Storage Sideboard - Project archives";
+    if (plant1.includes(object) || plant2.includes(object) || plant3.includes(object)) 
+        return "Plant - Natural inspiration";
+    return "Office Element";
+}
 
         document.addEventListener('click', onMouseClick);
 
