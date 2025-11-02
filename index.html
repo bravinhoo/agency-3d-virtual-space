@@ -103,6 +103,93 @@
             color: 0xffffff,
             roughness: 0.4
         });
+        // NEXOS AGENCY LOGO ON MAIN WALL
+const logoGeometry = new THREE.PlaneGeometry(3, 1);
+const logoMaterial = new THREE.MeshStandardMaterial({
+    color: 0x2c3e50, // Dark blue-gray
+    roughness: 0.3,
+    metalness: 0.7
+});
+const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+logo.position.set(0, 6, -11.9); // Centered on back wall
+logo.rotation.y = Math.PI; // Face forward
+scene.add(logo);
+
+// Logo text (using 3D text)
+const loader = new THREE.FontLoader();
+// Using a simple geometric representation for the logo
+const createLogoText = () => {
+    const textGeometry = new THREE.PlaneGeometry(2.5, 0.6);
+    const textMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff, // White text
+        roughness: 0.2,
+        metalness: 0.8
+    });
+    const textBackground = new THREE.Mesh(textGeometry, textMaterial);
+    textBackground.position.set(0, 6, -11.85);
+    textBackground.rotation.y = Math.PI;
+    scene.add(textBackground);
+
+    // Create NEXOS text using basic shapes
+    const createLetter = (shape, color, x, y, z) => {
+        const geometry = new THREE.ShapeGeometry(shape);
+        const material = new THREE.MeshStandardMaterial({ color: color });
+        const letter = new THREE.Mesh(geometry, material);
+        letter.position.set(x, y, z);
+        letter.rotation.y = Math.PI;
+        letter.scale.set(0.015, 0.015, 0.015);
+        scene.add(letter);
+        return letter;
+    };
+
+    // Create minimalist NEXOS design using geometric shapes
+    // Letter N - two vertical bars with one diagonal
+    const nShape1 = new THREE.Shape();
+    nShape1.moveTo(0, 0);
+    nShape1.lineTo(10, 0);
+    nShape1.lineTo(10, 40);
+    nShape1.lineTo(0, 40);
+    nShape1.lineTo(0, 0);
+
+    const nShape2 = new THREE.Shape();
+    nShape2.moveTo(50, 0);
+    nShape2.lineTo(60, 0);
+    nShape2.lineTo(60, 40);
+    nShape2.lineTo(50, 40);
+    nShape2.lineTo(50, 0);
+
+    const nShape3 = new THREE.Shape();
+    nShape3.moveTo(10, 40);
+    nShape3.lineTo(50, 0);
+    nShape3.lineTo(60, 0);
+    nShape3.lineTo(20, 40);
+    nShape3.lineTo(10, 40);
+
+    const letterN1 = createLetter(nShape1, 0x2c3e50, -1.0, 6, -11.8);
+    const letterN2 = createLetter(nShape2, 0x2c3e50, -0.6, 6, -11.8);
+    const letterN3 = createLetter(nShape3, 0x2c3e50, -0.8, 6, -11.8);
+
+    // Simple geometric dot as logo symbol
+    const dotGeometry = new THREE.CircleGeometry(0.15, 8);
+    const dotMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xFF6B35, // Orange accent
+        roughness: 0.2,
+        metalness: 0.8
+    });
+    const logoDot = new THREE.Mesh(dotGeometry, dotMaterial);
+    logoDot.position.set(0.8, 6, -11.8);
+    logoDot.rotation.y = Math.PI;
+    scene.add(logoDot);
+};
+
+createLogoText();
+
+// Add lighting specifically for the logo
+const logoLight = new THREE.SpotLight(0xffffff, 0.5);
+logoLight.position.set(0, 8, -8);
+logoLight.target.position.set(0, 6, -12);
+scene.add(logoLight);
+scene.add(logoLight.target);
         
         // Back wall
         const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
